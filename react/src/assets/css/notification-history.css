@@ -1,0 +1,27 @@
+a.approval_step_a {
+    color: #000;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+}
+a.approval_rule_a {
+    color: #000;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+}
+a.approval_user_a {
+    color: #000;
+    font-size: 11px;
+    font-weight: 400;
+    cursor: auto;
+}
+.approval_step_li {
+    list-style: none;
+}
+.approval_rule_li {
+    list-style: none;
+}
+.approval_user_li {
+    list-style: none;
+}

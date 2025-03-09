@@ -2,26 +2,26 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $guarded = [''];
+    protected $table = 't_users';
+    protected $primaryKey = 'user_id';
+    protected $keyType = 'string';
+    public $incrementing = false;
 
     /**
      * The attributes that should be hidden for serialization.
@@ -34,11 +34,45 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast.
+     * Get the attributes that should be cast.
      *
-     * @var array<string, string>
+     * @return array<string, string>
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
+    const ROLES = [
+        1 => "admin 1",
+        2 => "admin 2",
+        3 => "admin 3",
+        4 => "admin 4",
     ];
+    const STATUSES = [
+        "DRAFT" => 1,
+        "APPROVED" => 2,
+        "REJECTED" => 3,
+    ];
+
+    public function needToApprove(): bool
+    {
+        return (bool)$this->getAttribute('need_to_approve');
+    }
+
+    public function doesNotNeedToApprove(): bool
+    {
+        return !$this->needToApprove();
+    }
+
+    public function account(): BelongsTo
+    {
+        return $this->belongsTo(TAccount::class, 'account_id', 'account_id');
+    }
+    public function position():BelongsTo
+    {
+        return $this->belongsTo(TLkpPosition::class, 'position_id', 'code_id');
+    }
 }
